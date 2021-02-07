@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 8, 2017 8:03:57 AM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="yash.simpleprogrammer.User" table="USERS">
+        <id name="id" type="int">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" />
+        </property>
+        
+        <!-- <component name="proteinData">
+        <property name="total" type="int">
+            <column name="TOTAL" />
+        </property>
+        <property name="goal" type="int">
+            <column name="GOAL" />
+        </property>
+        </component> -->
+        
+        <!-- <one-to-one name="proteinData" class="yash.simpleprogrammer.ProteinData" cascade="save-update" /> -->
+        <many-to-one name="proteinData" class="yash.simpleprogrammer.ProteinData" column="PROTEIN_DATA_ID" cascade="save-update" unique="true"/>
+        
+        <!-- <idbag name="history" table="USER_HISTORY">
+        <collection-id type="int" column="ID">
+        	<generator class="increment"></generator>
+        </collection-id>
+        	<key column="USER_ID" />
+        	<composite-element class="yash.simpleprogrammer.UserHistory">
+        		<property name="entryTime" type="date" column="ENTRY_TIME" />
+        		<property name="entry" type="string" column="ENTRY" />
+        	</composite-element>
+        </idbag> -->
+        
+        <list name="history" table="USER_HISTORY" inverse="true" cascade="save-update">
+        	<key column="USER_ID" />
+        	<list-index column="POSITION"></list-index>
+        	<one-to-many class="yash.simpleprogrammer.UserHistory"/> 
+        </list>
+        
+        <!-- <join table="USER_GOALALERT" optional="true">
+        <key column="USER_ID" />
+        <many-to-one name="goalAlert" 
+        column="GOALALERT_ID" not-null="true" unique="true" cascade="save-update" />
+        </join> -->
+        
+        <set name="goalAlerts" table = "USER_GOALALERT" cascade="save-update">
+        <key column="USER_ID" />
+        <many-to-many class="yash.simpleprogrammer.GoalAlert" 
+        column="GOALALERT_ID" />
+        </set>
+    </class>
+</hibernate-mapping>
